@@ -50,7 +50,7 @@ const Login = () => {
       <section className="min-h-screen w-full flex items-center justify-center bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600">
         <div className="flex flex-col items-center justify-center rounded-3xl shadow-lg bg-white w-full max-w-md p-8">
           <h2 className="text-center text-3xl font-extrabold text-blue-800 mb-6">
-            Clinica veterinaria <br /> Oh My Dog
+            Sistema de herramientas
           </h2>
 
           <LoadingContainer visible={loading} miniVersion>

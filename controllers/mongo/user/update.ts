@@ -20,7 +20,6 @@ export default async function handler(
           usuario: user.usuario,
           nombre: user.nombre,
           correo: user.correo,
-          medico: user.medico,
           telefono: user.telefono,
           rol: user.rol,
           estado: user.estado,
