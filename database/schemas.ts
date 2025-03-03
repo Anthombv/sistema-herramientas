@@ -3,11 +3,9 @@ import {
   Auditory,
   Backup,
   Herramienta,
-  HerramientaSeleccionada,
   Solicitude,
   Usuario,
 } from "../models";
-
 
 const UserSchema = new mongoose.Schema<Usuario>(
   {
@@ -42,6 +40,8 @@ const HerramientaSchema = new mongoose.Schema<Herramienta>(
     nombre: { type: String },
     codigo: { type: String },
     descripcion: { type: String },
+    serie: { type: String },
+    modelo: { type: String },
     marca: { type: String },
     NParte: { type: String },
     ubicacion: { type: String },
@@ -49,6 +49,8 @@ const HerramientaSchema = new mongoose.Schema<Herramienta>(
     imagen: { type: String },
     tipo: { type: String },
     cantidad: { type: Number },
+    observacion: { type: String },
+    calibracion: { type: String },
   },
   { timestamps: true }
 );
@@ -64,32 +66,16 @@ HerramientaSchema.set("toJSON", {
 });
 
 export const HerramientaModel =
-  mongoose.models.Herramienta || mongoose.model("Herramienta", HerramientaSchema);
+  mongoose.models.Herramienta ||
+  mongoose.model("Herramienta", HerramientaSchema);
 
-const HerramientaSeleccionadosSchema = new mongoose.Schema<HerramientaSeleccionada>(
-  {
-    herramienta: { type: HerramientaSchema },
-    cantidad: { type: Number },
-  },
-  { timestamps: true }
-);
-
-// Duplicate the ID field.
-HerramientaSeleccionadosSchema.virtual("id").get(function () {
-  return this._id.toHexString();
-});
-
-// Ensure virtual fields are serialised.
-HerramientaSeleccionadosSchema.set("toJSON", {
-  virtuals: true,
-});
 
 const SolicitudeSchema = new mongoose.Schema<Solicitude>(
   {
     number: { type: Number },
     fecha: { type: String },
     solicitante: { type: String },
-    herramientas: { type: [HerramientaSeleccionadosSchema] },
+    herramientas: { type: [HerramientaSchema] },
     receptor: { type: String },
   },
   { timestamps: true }
@@ -106,8 +92,8 @@ SolicitudeSchema.set("toJSON", {
 });
 
 export const SolicitudeModel =
-  mongoose.models.Solicitudes || mongoose.model("Solicitudes", SolicitudeSchema);
-
+  mongoose.models.Solicitudes ||
+  mongoose.model("Solicitudes", SolicitudeSchema);
 
 const BackupSolicitudesSchema = new mongoose.Schema<Backup>(
   {

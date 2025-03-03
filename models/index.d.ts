@@ -23,7 +23,7 @@ export type LoginData = {
 //Roles del sistema
 export type UserRole =
   | 0 //Administrador
-  | 1 //Usuario
+  | 1; //Usuario
 
 // Modelo para los usuarios
 export type Usuario = {
@@ -45,6 +45,8 @@ export type Herramienta = {
   nombre: string;
   codigo: string;
   descripcion: string;
+  serie: string;
+  modelo: string;
   marca: string;
   NParte: string;
   ubicacion: string;
@@ -52,11 +54,9 @@ export type Herramienta = {
   imagen: string;
   tipo: string;
   cantidad: number;
-};
-
-export type HerramientaSeleccionada = {
-  herramienta: Herramienta;
-  cantidad: number;
+  observacion: string;
+  calibracion: string;
+  imagen: any;
 };
 
 // Modelo para las ventas

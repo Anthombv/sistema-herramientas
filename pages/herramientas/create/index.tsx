@@ -16,6 +16,8 @@ export const HerramientasCreate = () => {
     nombre: "",
     codigo: "",
     descripcion: "",
+    serie: "",
+    modelo: "",
     marca: "",
     NParte: "",
     ubicacion: "",
@@ -23,7 +25,21 @@ export const HerramientasCreate = () => {
     imagen: "",
     tipo: "",
     cantidad: 0,
+    observacion: "",
+    calibracion: "",
   });
+
+  const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+  
+    return response.json(); // Devuelve la URL del archivo guardado localmente
+  };
 
   const formik = useFormik<Herramienta>({
     enableReinitialize: true,
@@ -45,6 +61,18 @@ export const HerramientasCreate = () => {
         toast.warning("Ingrese el tipo de la herramienta");
         return;
       }
+
+      if (formik.values.imagen) {
+        try {
+          const uploadResult = await uploadImage(formik.values.imagen);
+          formData.imagen = uploadResult.url; // Guardamos la URL local en el form
+        } catch (error) {
+          toast.error("Error subiendo la imagen");
+          setLoading(false);
+          return;
+        }
+      }
+
       const response: ResponseData = await HttpClient(
         `/api/herramientas`,
         "POST",
@@ -112,6 +140,28 @@ export const HerramientasCreate = () => {
                   />
                 </div>
                 <div>
+                  <label>Serie de la herramienta</label>
+                  <input
+                    type="text"
+                    placeholder="Serie de la herramienta"
+                    name="serie"
+                    value={formik.values.serie}
+                    onChange={formik.handleChange}
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  />
+                </div>
+                <div>
+                  <label>Modelo de la herramienta</label>
+                  <input
+                    type="text"
+                    placeholder="Modelo de la herramienta"
+                    name="modelo"
+                    value={formik.values.modelo}
+                    onChange={formik.handleChange}
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  />
+                </div>
+                <div>
                   <label>Marca de la herramienta</label>
                   <input
                     type="text"
@@ -146,14 +196,16 @@ export const HerramientasCreate = () => {
                 </div>
                 <div>
                   <label>Estado de la herramienta</label>
-                  <input
-                    type="text"
-                    placeholder="Estado de la herramienta"
+                  <select
                     name="estado"
                     value={formik.values.estado}
                     onChange={formik.handleChange}
                     className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  />
+                  >
+                    <option value="">Seleccione un estado</option>
+                    <option value="Disponible">Disponible</option>
+                    <option value="En uso">En uso</option>
+                  </select>
                 </div>
                 <div>
                   <label>Tipo de la herramienta</label>
@@ -174,6 +226,32 @@ export const HerramientasCreate = () => {
                     value={formik.values.cantidad}
                     onChange={formik.handleChange}
                     className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  />
+                </div>
+                <div>
+                  <label>Observacion de la herramienta</label>
+                  <input
+                    type="text"
+                    placeholder="Observacion de la herramienta"
+                    name="observacion"
+                    value={formik.values.observacion}
+                    onChange={formik.handleChange}
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  />
+                </div>
+                <div>
+                  <label>Imagen de la herramienta</label>
+                  <input
+                    type="file"
+                    name="imagen"
+                    accept="image/*, application/pdf"
+                    onChange={(event) => {
+                      if (event.currentTarget.files) {
+                        const file = event.currentTarget.files[0];
+                        formik.setFieldValue("imagen", file);
+                      }
+                    }}
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   />
                 </div>
               </div>

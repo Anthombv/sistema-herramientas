@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import {
   MdOutlineSpaceDashboard,
   MdOutlineSettings,
@@ -42,7 +43,16 @@ const Sidebar = () => {
       </p>
       <div className="flex flex-col justify-start">
         <h1 className="text-center font-bold text-xl mb-2">Menu</h1>
-
+        <a
+           href="/"
+          className={`flex items-center gap-4 mb-2 px-5 py-2 rounded-lg hover:bg-blue-500 hover:text-white ${
+            isActive("/") ? "bg-blue-500 text-white" : "text-gray-800"
+          }`}
+          onClick={handleChanges}
+        >
+          <MdOutlineSpaceDashboard className="text-2xl" />
+          <span>Inicio</span>
+        </a>
         <a
           href="/solicitudes"
           className={`flex items-center gap-4 mb-2 px-5 py-2 rounded-lg hover:bg-blue-500 hover:text-white ${
@@ -77,7 +87,7 @@ const Sidebar = () => {
           onClick={handleChanges}
         >
           <MdOutlineSettings className="text-2xl" />
-          <span>Configuración</span>
+          <span>Administración</span>
         </a>
 
         <button
@@ -88,7 +98,6 @@ const Sidebar = () => {
           <span>Cerrar Sesión</span>
         </button>
       </div>
-   
     </div>
   );
 };

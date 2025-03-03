@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { Usuario, ModalProps, Medico } from "../../../models";
+import { Usuario, ModalProps } from "../../../models";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../controllers/hooks/use_auth";
 import theme from "../../../controllers/styles/theme";
@@ -13,7 +13,6 @@ const initialUser: Usuario = {
   contraseña: "",
   correo: "",
   telefono: "",
-  medico: null,
   rol: 1,
   nombre: "",
   identificacion: "",
@@ -27,34 +26,12 @@ interface Props extends ModalProps<Usuario> {
 const UserModal = (props: Props) => {
   const { auth } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
-  const [medicos, setMedicos] = useState<Medico[]>([]);
   const [initialValues, setInitialValues] = useState<Usuario>(initialUser);
 
   const handleClose = () => {
     formik.resetForm({ values: initialUser });
     props.close();
   };
-
-  const loadMedicos = async () => {
-    setLoading(true);
-
-    var response = await HttpClient(
-      "/api/medicos",
-      "GET",
-      auth.usuario,
-      auth.rol
-    );
-
-    const medicos: Array<Medico> = response.data ?? [];
-    console.log(medicos);
-    setMedicos(medicos);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    loadMedicos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // maneja los datos y comportamiento del formulario
   const formik = useFormik({
@@ -86,11 +63,6 @@ const UserModal = (props: Props) => {
 
       if (formData.estado === null) {
         toast.warning("Seleccione un estado para el usuario");
-        return;
-      }
-
-      if (formData.rol === 3 && formData.medico === null) {
-        toast.warning("Debe asignar un médico si el rol es Médico");
         return;
       }
 
@@ -214,10 +186,8 @@ const UserModal = (props: Props) => {
                   value={formik.values.rol}
                   defaultValue={1}
                 >
-                  <option value={1}>Secretaria</option>
-                  <option value={2}>Gerente</option>
-                  <option value={3}>Medico</option>
-                  <option value={4}>Cliente</option>
+                  <option value={1}>Usuario</option>
+                  <option value={0}>Administrador</option>
                 </select>
               </div>
 
@@ -240,34 +210,6 @@ const UserModal = (props: Props) => {
                   <option value="Inactivo">Inactivo</option>
                 </select>
               </div>
-
-              {formik.values.rol === 3 && (
-                <div>
-                  <label className="text-gray-700 text-sm font-bold mb-2">
-                    Asignar Médico
-                  </label>
-                  <select
-                    className="border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4"
-                    name="medico"
-                    onChange={(e) => {
-                      const selectedMedico = medicos.find(
-                        (medico) => medico.id === e.target.value
-                      );
-                      formik.setFieldValue("medico", selectedMedico || null);
-                    }}
-                    value={(formik.values.medico as Medico)?.id || ""}
-                  >
-                    <option value="" disabled>
-                      Seleccione un médico
-                    </option>
-                    {medicos.map((medico) => (
-                      <option key={medico.id} value={medico.id}>
-                        {medico.nombres} - {medico.especialidad.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
             </div>
             <hr />
             <button
