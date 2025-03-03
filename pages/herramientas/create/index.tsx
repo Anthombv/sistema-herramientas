@@ -62,16 +62,16 @@ export const HerramientasCreate = () => {
         return;
       }
 
-      if (formik.values.imagen) {
-        try {
-          const uploadResult = await uploadImage(formik.values.imagen);
-          formData.imagen = uploadResult.url; // Guardamos la URL local en el form
-        } catch (error) {
-          toast.error("Error subiendo la imagen");
-          setLoading(false);
-          return;
-        }
-      }
+      //if (formik.values.imagen) {
+      //  try {
+      //    const uploadResult = await uploadImage(formik.values.imagen);
+      //    formData.imagen = uploadResult.url; // Guardamos la URL local en el form
+      //  } catch (error) {
+      //    toast.error("Error subiendo la imagen");
+      //    setLoading(false);
+      //    return;
+      //  }
+      //}
 
       const response: ResponseData = await HttpClient(
         `/api/herramientas`,
